@@ -1,16 +1,12 @@
 defmodule Advent.Day1 do
   def run(measurements) do
-    {_, increases} = measurements
-    |> Enum.reduce({nil, []}, fn measurement, {previous, increases} ->
-      case previous do
-        nil -> {measurement, increases}
-        p when p < measurement -> {measurement, [measurement | increases]}
-        _ -> {measurement, increases}
-      end
-    end)
-
+    {_, increases} = Enum.reduce(measurements, {nil, []}, &detect_increase/2)
     Enum.count(increases)
   end
+
+  defp detect_increase(measurement, {nil, increases}), do: {measurement, increases}
+  defp detect_increase(measurement, {previous, increases}) when previous < measurement, do: {measurement, [measurement | increases]}
+  defp detect_increase(measurement, {_previous, increases}), do: {measurement, increases}
 
   def run_pt_2(measurements) do
     measurements
